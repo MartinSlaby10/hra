@@ -12,6 +12,15 @@ using namespace std;
     int nahodne(int minimum, int maximum) {
     return minimum + rand() % (maximum - minimum + 1);
 }
+//-------------------------------------efekty------------------------------------------
+struct StatusEfekt {
+        string nazev;
+        int zbyvajiciKola;
+        int poskozeniZaKolo;
+        bool omracen;
+        bool oslepeny;
+        bool vystraseny;
+    };
 //--------------------------hrac--------------------------------------------------------
     struct Hrac {
         string nazevTridy;
@@ -45,15 +54,16 @@ using namespace std;
         bool pouzitaKouzla[6];
         bool hexovaSmrstAktivni;
 };
-//-------------------------------------efekty------------------------------------------
-    struct StatusEfekt {
-        string nazev;
-        int zbyvajiciKola;
-        int poskozeniZaKolo;
-        bool omracen;
-        bool oslepeny;
-        bool vystraseny;
-};
+    Nepritel vytvorNepritele(string jmeno, int zivoty, int utok, int zlatoMin, int zlatoMax, int odmenaXp, bool mini = false, bool boss = false, vector<string> hlasy = {}) {
+        Nepritel n;
+        n.jmeno = jmeno; n.maxZivoty = zivoty; n.utok = utok; n.zlatoMin = zlatoMin; n.zlatoMax = zlatoMax; n.odmenaZkusenosti = odmenaXp; n.jeHlavniBoss = boss; n.jeMiniBoss = mini; n.hlasy = hlasy;
+        n.stav = {"", 0, 0, false, false, false};
+        n.jeHexara = false; n.posledniKouzloIndex = -1;
+        for (int i = 0; i < 6; ++i) n.pouzitaKouzla[i] = false;
+        n.hexovaSmrstAktivni = false;
+        return n;
+    }
+
 //----------------------------------------------------------------------
 
 int main(){

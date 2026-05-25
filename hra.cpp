@@ -63,6 +63,44 @@ struct StatusEfekt {
         n.hexovaSmrstAktivni = false;
         return n;
     }
+//--------------------------------monstra-------------------------------------------------------------------------------------------------------------------------------------------------------
+vector<Nepritel> vsechnaMonstra() {
+        return {
+            vytvorNepritele("Goblin",    6,  2, 1, 4,  8,  false,false, {"Mam te gobline!","Buuu!","Zlaticko!"}),
+            vytvorNepritele("Skret",     7,  2, 1, 3,  9,  false,false, {"Gnaf gnaf!","Crush!"}),
+            vytvorNepritele("Vlk",       8,  3, 0, 2,  10, false,false, {"Vrrrr!","Auuuu!"}),
+            vytvorNepritele("Kostlivec", 7,  2, 0, 3,  9,  false,false, {"Klap klap klap!","Shhhhh..."}),
+            vytvorNepritele("Zombie",    9,  3, 0, 2,  11, false,false, {"Mozek!","Hrrrggg..."}),
+            vytvorNepritele("Ork",      10,  4, 2, 5,  12, false,false, {"WAAAAAGH!","Smrt lidem!"}),
+            vytvorNepritele("Netopyr",   5,  2, 0, 1,   7, false,false, {"Sssss!","Citim krev!"}),
+            vytvorNepritele("Pavouk",    6,  2, 0, 2,   8, false,false, {"...","...klik klik klik"}),
+            vytvorNepritele("Had",       6,  2, 0, 2,   8, false,false, {"Ssssss!","Jed tece..."}),
+            vytvorNepritele("Mumie",     9,  3, 1, 4,  11, false,false, {"Kletba na tebe!","Vecny spanek!"}),
+            vytvorNepritele("Banshee",   8,  3, 0, 3,  10, false,false, {"AAAAAAAAAH!","Slysis me?!"}),
+            vytvorNepritele("Kyklon",   11,  4, 1, 4,  13, false,false, {"BOOM!","Whuuush!"}),
+            vytvorNepritele("Golem",    12,  4, 0, 3,  12, false,false, {"...","GRUMBLE."}),
+            vytvorNepritele("Duch",      7,  2, 0, 2,   9, false,false, {"Vidis me?","Buuu!"}),
+            vytvorNepritele("Troll",    13,  5, 1, 5,  14, false,false, {"Tamaten hnufak cufak!","Zlaticko-sutry moje!","Do gulase te!"}),
+            vytvorNepritele("Harpy",     9,  3, 0, 3,  10, false,false, {"Screeee!","Letaam!"}),
+        };
+    }
+
+//--------------------------------------miniboss+hexara----------------------------------------------------------------------------------------------------------------------------
+
+Nepritel vytvorMiniHydru() {
+        return vytvorNepritele("Hydra", 25, 6, 8, 15, 35, true,false,
+                               {"Kolik hlav ces vidет?!","Rrraaah!","Znovu vyrostu!"});
+    }
+Nepritel vytvorMiniLicha() {
+        return vytvorNepritele("Lich", 22, 7, 10, 18, 40, true,false,
+                               {"Smrt je jen zacatek.","Magie te pohltí!","Mrtvi vstaveji!"});
+    }
+Nepritel vytvorHexaru() {
+        Nepritel n = vytvorNepritele("Hexara", 60, 0, 0, 0, 150, false, true,
+                                     {"Sest rukou - sest osudu!","Chaos je ma sila!","Citis to? Magie vre!"});
+        n.jeHexara = true;
+        return n;
+    }
 
 //----------------------------------------------------------------------
 

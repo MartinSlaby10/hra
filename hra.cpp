@@ -3,8 +3,15 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
+#include <limits>
 using namespace std;
 //----------------utilitky-------------------------------------------------------
+    void pauza() {
+        cout << "\n[Stiskni Enter pro pokracovani...]";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+}
     void vytiskniCaru(char znak = '-', int delka = 60) {
     for (int i = 0; i < delka; ++i) cout << znak;
     cout << '\n';
@@ -38,7 +45,138 @@ struct StatusEfekt {
         bool jedSchopnost[3];
         bool omraceniSchopnost[3];
 };
-//------------------------------enemak-----------------------------------------
+
+//----------------------------------zobrazeniHrace-------------------------------------------------------------
+
+void zobrazHrace(const Hrac& h) {
+    vytiskniCaru();
+    cout << "  " << h.nazevTridy << "  |  Uroven " << h.uroven
+         << "  |  XP " << h.zkusenosti << "/" << h.zkusenostiNaDalsiUroven << "\n";
+    cout << "  HP: " << h.zivoty << "/" << h.maxZivoty
+         << "  |  Mana: " << h.mana << "/" << h.maxMana
+         << "  |  Zlato: " << h.zlato << "\n";
+    vytiskniCaru();
+}
+
+//-------------------------uroven----------------------------------
+
+void zvysUroven(Hrac& h) {
+    h.uroven++;
+    int ziskZivotu = 2, ziskMany = 1, ziskUtoku = 1;
+    h.maxZivoty += ziskZivotu;
+    h.zivoty = min(h.zivoty + ziskZivotu, h.maxZivoty);
+    h.maxMana += ziskMany;
+    h.utok += ziskUtoku;
+    h.zkusenostiNaDalsiUroven = h.zkusenostiNaDalsiUroven + h.zkusenostiNaDalsiUroven / 2;
+    h.zkusenosti = 0;
+    cout << "\n*** LEVEL UP! Jsi nyni uroven " << h.uroven << "! ***\n";
+    cout << "  Max HP +" << ziskZivotu << ", Mana +" << ziskMany
+         << ", Utok +" << ziskUtoku << "\n";
+    pauza();
+}
+
+//------------------------xpcka--------------------------------------------------------------------------
+
+void pridejZkusenosti(Hrac& h, int mnozstvi) {
+    h.zkusenosti += mnozstvi;
+    cout << "  (+" << mnozstvi << " XP)\n";
+    while (h.zkusenosti >= h.zkusenostiNaDalsiUroven) zvysUroven(h);
+}
+
+//------------------------tridy----------------------------------------------------------------------------------------------------------------------------------------
+Hrac vytvorPaladina() {
+    Hrac h;
+    h.nazevTridy="Paladin"; h.maxZivoty=14; h.zivoty=14;
+    h.maxMana=8; h.mana=8; h.zlato=5; h.uroven=1;
+    h.zkusenosti=0; h.zkusenostiNaDalsiUroven=20; h.utok=4;
+    h.nazevSchopnosti[0]="Uder";         h.cenaMana[0]=0; h.poskozeniSchopnosti[0]=4;  h.plosnaSchopnost[0]=false; h.leceniSchopnost[0]=false; h.jedSchopnost[0]=false; h.omraceniSchopnost[0]=false;
+    h.nazevSchopnosti[1]="Uder svetlem"; h.cenaMana[1]=2; h.poskozeniSchopnosti[1]=2;  h.plosnaSchopnost[1]=true;  h.leceniSchopnost[1]=false; h.jedSchopnost[1]=false; h.omraceniSchopnost[1]=false;
+    h.nazevSchopnosti[2]="Oziveni";      h.cenaMana[2]=1; h.poskozeniSchopnosti[2]=2;  h.plosnaSchopnost[2]=false; h.leceniSchopnost[2]=true;  h.jedSchopnost[2]=false; h.omraceniSchopnost[2]=false;
+    return h;
+}
+
+Hrac vytvorLovce() {
+    Hrac h;
+    h.nazevTridy="Lovec"; h.maxZivoty=11; h.zivoty=11;
+    h.maxMana=6; h.mana=6; h.zlato=5; h.uroven=1;
+    h.zkusenosti=0; h.zkusenostiNaDalsiUroven=20; h.utok=5;
+    h.nazevSchopnosti[0]="Strela";          h.cenaMana[0]=0; h.poskozeniSchopnosti[0]=5; h.plosnaSchopnost[0]=false; h.leceniSchopnost[0]=false; h.jedSchopnost[0]=false; h.omraceniSchopnost[0]=false;
+    h.nazevSchopnosti[1]="Jedovata strela"; h.cenaMana[1]=2; h.poskozeniSchopnosti[1]=3; h.plosnaSchopnost[1]=false; h.leceniSchopnost[1]=false; h.jedSchopnost[1]=true;  h.omraceniSchopnost[1]=false;
+    h.nazevSchopnosti[2]="Omraceni";        h.cenaMana[2]=3; h.poskozeniSchopnosti[2]=2; h.plosnaSchopnost[2]=false; h.leceniSchopnost[2]=false; h.jedSchopnost[2]=false; h.omraceniSchopnost[2]=true;
+    return h;
+}
+
+Hrac vytvorMaga() {
+    Hrac h;
+    h.nazevTridy="Mag"; h.maxZivoty=9; h.zivoty=9;
+    h.maxMana=14; h.mana=14; h.zlato=5; h.uroven=1;
+    h.zkusenosti=0; h.zkusenostiNaDalsiUroven=20; h.utok=3;
+    h.nazevSchopnosti[0]="Kouzelny sip";  h.cenaMana[0]=0; h.poskozeniSchopnosti[0]=3; h.plosnaSchopnost[0]=false; h.leceniSchopnost[0]=false; h.jedSchopnost[0]=false; h.omraceniSchopnost[0]=false;
+    h.nazevSchopnosti[1]="Ohniva koule";  h.cenaMana[1]=3; h.poskozeniSchopnosti[1]=4; h.plosnaSchopnost[1]=true;  h.leceniSchopnost[1]=false; h.jedSchopnost[1]=false; h.omraceniSchopnost[1]=false;
+    h.nazevSchopnosti[2]="Absorpce many"; h.cenaMana[2]=0; h.poskozeniSchopnosti[2]=3; h.plosnaSchopnost[2]=false; h.leceniSchopnost[2]=true;  h.jedSchopnost[2]=false; h.omraceniSchopnost[2]=false;
+    return h;
+}
+Hrac vytvorWarlocka() {
+    Hrac h;
+    h.nazevTridy="Warlock"; h.maxZivoty=10; h.zivoty=10;
+    h.maxMana=12; h.mana=12; h.zlato=5; h.uroven=1;
+    h.zkusenosti=0; h.zkusenostiNaDalsiUroven=20; h.utok=4;
+    h.nazevSchopnosti[0]="Temny dotyk";   h.cenaMana[0]=0; h.poskozeniSchopnosti[0]=4; h.plosnaSchopnost[0]=false; h.leceniSchopnost[0]=false; h.jedSchopnost[0]=false; h.omraceniSchopnost[0]=false;
+    h.nazevSchopnosti[1]="Prokleti";      h.cenaMana[1]=3; h.poskozeniSchopnosti[1]=3; h.plosnaSchopnost[1]=false; h.leceniSchopnost[1]=false; h.jedSchopnost[1]=true;  h.omraceniSchopnost[1]=false;
+    h.nazevSchopnosti[2]="Kradez zivota"; h.cenaMana[2]=4; h.poskozeniSchopnosti[2]=5; h.plosnaSchopnost[2]=false; h.leceniSchopnost[2]=true;  h.jedSchopnost[2]=false; h.omraceniSchopnost[2]=false;
+    return h;
+}
+
+//-------------------------------------------------------------------------------zobrazeniTridy-------------------------------------------------------------------------------------------------------------------------------
+
+void zobrazInfoTridy(const Hrac& h) {
+    vytiskniCaru('=');
+    cout << "  Class: " << h.nazevTridy << "\n";
+    vytiskniCaru();
+    cout << "  Statistiky:\n";
+    cout << "    HP:   " << h.zivoty << "/" << h.maxZivoty << "\n";
+    cout << "    Utok: " << h.utok << "\n";
+    cout << "    Mana: " << h.mana << "/" << h.maxMana << "\n";
+    cout << "\n  Schopnosti:\n";
+    for (int i=0;i<3;i++) {
+        cout << "    [" << i+1 << "] " << h.nazevSchopnosti[i];
+        if (h.cenaMana[i]>0) cout << " (cena: " << h.cenaMana[i] << " many)";
+ 
+        int typSchopnosti = (h.leceniSchopnost[i]   ? 8 : 0)
+                          | (h.plosnaSchopnost[i]    ? 4 : 0)
+                          | (h.jedSchopnost[i]       ? 2 : 0)
+                          | (h.omraceniSchopnost[i]  ? 1 : 0);
+        switch (typSchopnosti) {
+        case 8:  cout << " [LECENI +" << h.poskozeniSchopnosti[i] << " HP]";       break;
+        case 4:  cout << " [AOE dmg: " << h.poskozeniSchopnosti[i] << "]";         break;
+        case 2:  cout << " [JED + dmg: " << h.poskozeniSchopnosti[i] << "]";       break;
+        case 1:  cout << " [OMRACENI + dmg: " << h.poskozeniSchopnosti[i] << "]";  break;
+        default: cout << " [dmg: " << h.poskozeniSchopnosti[i] << "]";             break;
+        }
+        cout << "\n";
+    }
+    vytiskniCaru('=');
+}
+
+//-------------------------------------------------------vybertridy-----------------------------------------------------------------------------------------------
+
+Hrac zvolitTridu() {
+    vector<Hrac> tridy = { vytvorPaladina(), vytvorLovce(), vytvorMaga(), vytvorWarlocka() };
+    while (true) {
+        cout << "\nVyber si classu:\n";
+        for (int i=0;i<(int)tridy.size();i++)
+            cout << "  [" << i+1 << "] " << tridy[i].nazevTridy << "\n";
+        int volba; cin >> volba;
+        if (volba<1||volba>(int)tridy.size()) { cout << "Neplatna volba.\n"; continue; }
+        Hrac& vybranaTrida = tridy[volba-1];
+        zobrazInfoTridy(vybranaTrida);
+        cout << "Chces hrat za " << vybranaTrida.nazevTridy << "? [1=Ano / 2=Jina class]: ";
+        int potvrzeni; cin >> potvrzeni;
+        if (potvrzeni==1) return vybranaTrida;
+    }
+}
+
+//------------------------------enemak---------------------------------------------------------------------------------
     struct Nepritel {
         string jmeno;
         int maxZivoty, zivoty;
